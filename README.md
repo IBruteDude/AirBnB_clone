@@ -1,6 +1,6 @@
 # AirBnB_clone
 
-![AirBnB](https://github.com/monoprosito/AirBnB_clone/blob/feature/console/hBnB.png?raw=true)
+![AirBnB](https://raw.githubusercontent.com/monoprosito/AirBnB_clone/feature/console/hBnB.png)
 
 ## What’s a command interpreter?
 
