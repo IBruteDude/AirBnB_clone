@@ -1,14 +1,17 @@
 #!/usr/bin/env python3
-"""Module defining the BaseModel class for other classes"""
+''' Module defining the BaseModel class for other classes '''
+import sys
+import os
 from datetime import datetime
 from uuid import uuid4
-
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+from models import storage
 
 class BaseModel:
     """The base model class with functionality for other entity classes"""
 
     def __init__(self, *args, **kwargs):
-        """Initialise the base model object id"""
+        ""''' Initialise the base model object id '''""
         if len(kwargs) == 0:
             self.created_at = datetime.now()
             self.id = str(uuid4())
@@ -21,10 +24,12 @@ class BaseModel:
                 self.created_at = datetime.fromisoformat(self.created_at)
             if hasattr(self, 'updated_at'):
                 self.updated_at = datetime.fromisoformat(self.updated_at)
+        storage.new(self)
 
     def save(self):
         """Saves the timestamp of updating the instance"""
         self.updated_at = datetime.now()
+        storage.save()
 
     def to_dict(self):
         """Converts the instance into a dict representation"""
