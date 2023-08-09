@@ -1,4 +1,5 @@
 #!/usr/bin/python3
+from models.base_model import BaseModel
 import cmd
 
 class HBNBCommand(cmd.Cmd):
@@ -21,12 +22,11 @@ class HBNBCommand(cmd.Cmd):
         ''' Creates a new instance of BaseModel '''
         if not arg:
             print("** class name missing **")
-        
-        try:
-            new_instance = eval(arg)()
+        elif arg == 'BaseModel':
+            new_instance = BaseModel()
             new_instance.save()
             print(new_instance.id)
-        except NameError:
+        else:
             print("** class doesn't exist **")
 
     def do_show(self, arg):

@@ -1,21 +1,26 @@
 #!/usr/bin/env python3
-"Module defining the BaseModel class for other classes"
+''' Module defining the BaseModel class for other classes '''
+import sys
+import os
 from datetime import datetime
 from uuid import uuid4
-
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+from models import storage
 
 class BaseModel:
-    "The base model class with functionality for other entity classes"
+    ''' The base model class with functionality for other entity classes '''
     __no_instances = 0
 
-    def __init__(self):
-        "Initialise the base model object id"
+    def __init__(self, *args, **kwargs):
+        ''' Initialise the base model object id '''
         self.created_at = datetime.now()
         self.id = str(uuid4())
         self.updated_at = datetime.now()
+        storage.new(self)
 
     def save(self):
         self.updated_at = datetime.now()
+        storage.save()
 
     def to_dict(self):
         obj_dict = self.__dict__.copy()
