@@ -1,23 +1,33 @@
 #!/usr/bin/env python3
-"Module defining the BaseModel class for other classes"
+"""Module defining the BaseModel class for other classes"""
 from datetime import datetime
 from uuid import uuid4
 
 
 class BaseModel:
-    "The base model class with functionality for other entity classes"
-    __no_instances = 0
+    """The base model class with functionality for other entity classes"""
 
-    def __init__(self):
-        "Initialise the base model object id"
-        self.created_at = datetime.now()
-        self.id = str(uuid4())
-        self.updated_at = datetime.now()
+    def __init__(self, *args, **kwargs):
+        """Initialise the base model object id"""
+        if len(kwargs) == 0:
+            self.created_at = datetime.now()
+            self.id = str(uuid4())
+            self.updated_at = datetime.now()
+        else:
+            for key, value in zip(kwargs.keys(), kwargs.values()):
+                if key != '__class__':
+                    setattr(self, key, value)
+            if hasattr(self, 'created_at'):
+                self.created_at = datetime.fromisoformat(self.created_at)
+            if hasattr(self, 'updated_at'):
+                self.updated_at = datetime.fromisoformat(self.updated_at)
 
     def save(self):
+        """Saves the timestamp of updating the instance"""
         self.updated_at = datetime.now()
 
     def to_dict(self):
+        """Converts the instance into a dict representation"""
         obj_dict = self.__dict__.copy()
         obj_dict["created_at"] = self.created_at.isoformat()
         obj_dict["updated_at"] = self.updated_at.isoformat()
@@ -25,6 +35,7 @@ class BaseModel:
         return obj_dict
 
     def __str__(self):
+        """String representation of the instance"""
         return '[{}] ({}) {}'.format(
             type(self).__name__, self.id, self.__dict__
         )
