@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Module defining the Place class"""
-from base_model import BaseModel
+from models.base_model import BaseModel
 
 
 class Place(BaseModel):

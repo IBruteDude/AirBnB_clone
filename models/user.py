@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Module defining the User class"""
-from base_model import BaseModel
+from models.base_model import BaseModel
 
 
 class User(BaseModel):

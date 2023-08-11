@@ -1,9 +1,10 @@
-#!/usr/bin/python3
+#!/usr/bin/env python3
 from models.base_model import BaseModel
 import cmd
 
-class HBNBCommand(cmd.Cmd):
 
+class HBNBCommand(cmd.Cmd):
+    ''' The HBNB interpreter implementation class '''
     prompt ="(hbnb) "
 
     def do_EOF(self, arg):

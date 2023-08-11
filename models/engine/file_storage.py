@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 ''' serializes instances to a JSON file and deserializes JSON file to instances '''
-
 import json
 
 
@@ -27,13 +26,20 @@ class FileStorage:
             json.dump(obj_dict, myFile)
 
     def reload(self):
+        from models.amenity import Amenity
+        from models.base_model import BaseModel
+        from models.city import City
+        from models.review import Review
+        from models.state import State
+        from models.user import User
+        from models.place import Place
         ''' deserializes the JSON file to __objects '''
         try:
             with open(self.__file_path, 'r', encoding="UTF-8") as myFile:
                 obj_dict = json.load(myFile)
 
             for key, value in obj_dict.items():
-                obj = self.class_dict[value['__class__']](**value)
+                obj = eval(f"{value['__class__']}(**value)")
                 self.__objects[key] = obj
         except FileNotFoundError:
             pass
