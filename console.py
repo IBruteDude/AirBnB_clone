@@ -18,10 +18,12 @@ class HBNBCommand(cmd.Cmd):
     classes = ['BaseModel', 'City', 'Amenity', 'Place', 'Review', 'State', 'User']
     def do_EOF(self, arg):
         ''' This function used to quit the cmd '''
+        print("")
         return True
 
     def do_quit(self, arg):
-        ''' This function used to quit the cmd '''
+        '''Quit command to exit the program
+        '''
         return True
 
     def emptyline(self):
