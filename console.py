@@ -171,9 +171,9 @@ class HBNBCommand(cmd.Cmd):
             else:
                 print(len(all_found))
         elif mthd_name == 'show' or mthd_name == 'destroy':
-            eval(f'self.do_{mthd_name}("{cls_name} {args}")')
+            eval(f'self.do_{mthd_name}')(cls_name + ' ' + args.strip('"'))
         elif mthd_name == 'update':
-            args = [ string.strip() for string in args.split(',')]
+            args = [ string.strip().strip('"') for string in args.split(',')]
             if args[1][0] == '{':
                 dict_repr = dict(eval(args[1]))
                 for key, value in dict_repr.items():
