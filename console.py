@@ -42,6 +42,7 @@ class HBNBCommand(cmd.Cmd):
             print("** class name missing **")
         elif args[0] in self.classes:
             new_instance = eval(args[0])()
+
             new_instance.save()
             print(new_instance.id)
         else:
@@ -145,6 +146,42 @@ class HBNBCommand(cmd.Cmd):
             storage.save()
         else:
             print("** attribute doesn't exist **")
+
+    def default(self, line):
+        ''' Handles all the method call syntax and non-command cases'''
+        cls_name = line[:line.find('.')]
+        try:
+            if not issubclass(eval(cls_name), BaseModel):
+                print("** class doesn't exist **")
+                return
+        except NameError:
+            print("** class doesn't exist **")
+            return
+
+        mthd_name = line[line.find('.') + 1:line.find('(')]
+        args = line[line.find('(') + 1:line.find(')')]
+        if mthd_name == 'all' or mthd_name == 'count':
+            all_found = []
+            for key, value in storage.all().items():
+                if key[:key.find('.')] == cls_name:
+                    all_found.append(str(value))
+            
+            if mthd_name == 'all':
+                print(all_found)
+            else:
+                print(len(all_found))
+        elif mthd_name == 'show' or mthd_name == 'destroy':
+            eval(f'self.do_{mthd_name}("{cls_name} {args}")')
+        elif mthd_name == 'update':
+            args = [ string.strip() for string in args.split(',')]
+            if args[1][0] == '{':
+                dict_repr = dict(eval(args[1]))
+                for key, value in dict_repr.items():
+                    self.do_update(f"{cls_name} {args[0]} {key} {value}")
+            else:
+                self.do_update(f"{cls_name} {args[0]} {args[1]} {args[2]}")
+        else:
+            print("** unknown method  **")
 
 if __name__ == '__main__':
     HBNBCommand().cmdloop()
