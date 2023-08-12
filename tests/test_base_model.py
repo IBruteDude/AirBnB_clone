@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-'''Unit testing module for the BaseModel class'''
+''' Unit testing module for the BaseModel class '''
 from models.base_model import BaseModel
 from uuid import UUID
 from datetime import datetime

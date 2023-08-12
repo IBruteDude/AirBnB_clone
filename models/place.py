@@ -1,12 +1,12 @@
 #!/usr/bin/python3
-"""Module defining the Place class"""
+''' Module defining the Place class '''
 from models.base_model import BaseModel
 
 
 class Place(BaseModel):
-    """Class for modeling a Place entity"""
+    ''' Class for modeling a Place entity '''
     def __init__(self, *args, **kwargs):
-        """Initialiser of the Place class"""
+        ''' Initialiser of the Place class '''
         self.name = ''
         self.city_id = ''
         self.user_id = ''
