@@ -1,4 +1,5 @@
 #!/usr/bin/python3
+""" This module defines the entry point of the command interpreter """
 from models.base_model import BaseModel
 from models.city import City
 from models.amenity import Amenity
