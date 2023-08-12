@@ -16,6 +16,11 @@ class HBNBCommand(cmd.Cmd):
     prompt ="(hbnb) "
 
     classes = ['BaseModel', 'City', 'Amenity', 'Place', 'Review', 'State', 'User']
+    def do_help(self, arg):
+        """To get help on a command, type help <topic>.
+        """
+        return super().do_help(arg)
+
     def do_EOF(self, arg):
         ''' This function used to quit the cmd '''
         print("")
