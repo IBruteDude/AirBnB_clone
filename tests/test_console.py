@@ -71,3 +71,33 @@ class TestHBNBCommand_create(unittest.TestCase):
             HBNBCommand.onecmd("create BaseModel")
             self.assertIsInstance(f.getvalue().strip(), str)
             self.assertIn("BaseModel.{}".format(f.getvalue().strip(),storage.all().keys()))
+
+        with patch("sys.stdout", new=StringIO()) as f:
+            HBNBCommand.onecmd("create Amenity")
+            self.assertIsInstance(f.getvalue().strip(), str)
+            self.assertIn("Amenity.{}".format(f.getvalue().strip(),storage.all().keys()))
+
+        with patch("sys.stdout", new=StringIO()) as f:
+            HBNBCommand.onecmd("create City")
+            self.assertIsInstance(f.getvalue().strip(), str)
+            self.assertIn("City.{}".format(f.getvalue().strip(),storage.all().keys()))
+
+        with patch("sys.stdout", new=StringIO()) as f:
+            HBNBCommand.onecmd("create Place")
+            self.assertIsInstance(f.getvalue().strip(), str)
+            self.assertIn("Place.{}".format(f.getvalue().strip(),storage.all().keys()))
+
+        with patch("sys.stdout", new=StringIO()) as f:
+            HBNBCommand.onecmd("create Review")
+            self.assertIsInstance(f.getvalue().strip(), str)
+            self.assertIn("Review.{}".format(f.getvalue().strip(),storage.all().keys()))
+
+        with patch("sys.stdout", new=StringIO()) as f:
+            HBNBCommand.onecmd("create State")
+            self.assertIsInstance(f.getvalue().strip(), str)
+            self.assertIn("State.{}".format(f.getvalue().strip(),storage.all().keys()))
+
+        with patch("sys.stdout", new=StringIO()) as f:
+            HBNBCommand.onecmd("create User")
+            self.assertIsInstance(f.getvalue().strip(), str)
+            self.assertIn("User.{}".format(f.getvalue().strip(),storage.all().keys()))
