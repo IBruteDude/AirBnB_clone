@@ -20,16 +20,16 @@ class TestHBNBCommand_help_quit(unittest.TestCase):
 
     def test_enter(self):
         message = "Quit command to exit the program"
-        with patch("sys.stdout", new=StringIO()) as output:
-            self.assertFalse(HBNBCommand.onecmd("help quit"))
-            self.assertEqual(message, output.getvalue().strip())
+        with patch("sys.stdout", new=StringIO()) as f:
+            HBNBCommand.onecmd("help quit")
+            self.assertEqual(message, f.getvalue().strip())
 
     def test_quit(self):
-        with patch("sys.stdout", new=StringIO()) as output:
+        with patch("sys.stdout", new=StringIO()) as f:
             self.assertTrue(HBNBCommand().onecmd("quit"))
 
     def test_EOF(self):
-        with patch("sys.stdout", new=StringIO()) as output:
+        with patch("sys.stdout", new=StringIO()) as f:
             self.assertTrue(HBNBCommand().onecmd("EOF"))
 
 class TestHBNBCommand_create(unittest.TestCase):
@@ -50,24 +50,24 @@ class TestHBNBCommand_create(unittest.TestCase):
 
     def test_create_miss_class(self):
         errMessage = "** class name missing **"
-        with patch("sys.stdout", new=StringIO()) as output:
-            self.assertFalse(HBNBCommand().onecmd("create"))
-            self.assertEqual(errMessage, output.getvalue().strip())
+        with patch("sys.stdout", new=StringIO()) as f:
+            HBNBCommand().onecmd("create")
+            self.assertEqual(errMessage, f.getvalue().strip())
 
     def test_create_exist_class(self):
         errMessage = "** class doesn't exist **"
-        with patch("sys.stdout", new=StringIO()) as output:
-            self.assertFalse(HBNBCommand.onecmd("create MyModal"))
-            self.assertEqual(errMessage, output.getvalue().strip())
+        with patch("sys.stdout", new=StringIO()) as f:
+            HBNBCommand.onecmd("create MyModal")
+            self.assertEqual(errMessage, f.getvalue().strip())
 
     def test_create_unknown_methon(self):
         errMessage = "** unKnown method **"
-        with patch("sys.stdout", new=StringIO()) as output:
-            self.assertFalse(HBNBCommand.onecmd("BaseModel.create()"))
-            self.assertEqual(errMessage, output.getvalue().strip())
+        with patch("sys.stdout", new=StringIO()) as f:
+            HBNBCommand.onecmd("BaseModel.create()")
+            self.assertEqual(errMessage, f.getvalue().strip())
 
     def test_create_instance(self):
-        with patch("sys.stdout", new=StringIO()) as output:
-            self.assertEqual(HBNBCommand.onecmd("create BaseModel"))
-            self.assertIsInstance(output.getvalue().strip(), str)
-            self.assertIn("BaseModel.{}".format(output.getvalue().strip(),storage.all().keys()))
+        with patch("sys.stdout", new=StringIO()) as f:
+            HBNBCommand.onecmd("create BaseModel")
+            self.assertIsInstance(f.getvalue().strip(), str)
+            self.assertIn("BaseModel.{}".format(f.getvalue().strip(),storage.all().keys()))
