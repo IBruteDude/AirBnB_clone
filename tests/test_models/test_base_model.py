@@ -8,7 +8,6 @@ import unittest
 
 class TestBaseModel(unittest.TestCase):
     ''' A unittest class for testing the BaseModel class '''
-
     def setUp(self):
         ''' Set up all the class test units '''
         self.BM1 = BaseModel()
