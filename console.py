@@ -13,12 +13,15 @@ import cmd
 
 class HBNBCommand(cmd.Cmd):
     ''' The HBNB interpreter implementation class '''
-    prompt ="(hbnb) "
+    prompt = "(hbnb) "
 
-    classes = ['BaseModel', 'City', 'Amenity', 'Place', 'Review', 'State', 'User']
+    classes = [
+        'BaseModel', 'City', 'Amenity',
+        'Place', 'Review', 'State', 'User'
+    ]
+
     def do_help(self, arg):
-        """To get help on a command, type help <topic>.
-        """
+        ''' To get help on a command, type help <topic>. '''
         return super().do_help(arg)
 
     def do_EOF(self, arg):
@@ -27,8 +30,7 @@ class HBNBCommand(cmd.Cmd):
         return True
 
     def do_quit(self, arg):
-        '''Quit command to exit the program
-        '''
+        ''' Quit command to exit the program '''
         return True
 
     def emptyline(self):
@@ -49,7 +51,7 @@ class HBNBCommand(cmd.Cmd):
             print("** class doesn't exist **")
 
     def do_show(self, arg):
-        ''' Prints the string representation of an instance based on the class name and id '''
+        ''' Prints the string representation of an instance '''
         args = arg.split()
         object = storage.all()
         if not args:
@@ -59,7 +61,7 @@ class HBNBCommand(cmd.Cmd):
         elif len(args) < 2:
             print("** instance id missing **")
         elif "{}.{}".format(args[0], args[1]) not in object:
-            print("** instance id missing **")
+            print("** no instance found **")
         else:
             selectedInstance = object["{}.{}".format(args[0], args[1])]
             print("{}".format(selectedInstance))
@@ -82,7 +84,7 @@ class HBNBCommand(cmd.Cmd):
             storage.save()
 
     def do_all(self, arg):
-        ''' Prints all string representation of all instances based or not on the class name '''
+        ''' Prints all stored entities based or not on the class name '''
         args = arg.split()
         object = storage.all()
         if len(args) == 0:
@@ -92,7 +94,7 @@ class HBNBCommand(cmd.Cmd):
             print("** class doesn't exist **")
         elif len(args) != 0:
             for key, value in object.items():
-                if value.__class__.__name__ ==  args[0]:
+                if value.__class__.__name__ == args[0]:
                     print(key, value)
 
     def do_update(self, arg):
@@ -154,7 +156,7 @@ class HBNBCommand(cmd.Cmd):
             if not issubclass(eval(cls_name), BaseModel):
                 print("** class doesn't exist **")
                 return
-        except NameError:
+        except Exception:
             print("** class doesn't exist **")
             return
 
@@ -165,13 +167,14 @@ class HBNBCommand(cmd.Cmd):
             for key, value in storage.all().items():
                 if key[:key.find('.')] == cls_name:
                     all_found.append(str(value))
-            
+
             if mthd_name == 'all':
                 print(all_found)
             else:
                 print(len(all_found))
         elif mthd_name == 'show' or mthd_name == 'destroy':
-            eval(f'self.do_{mthd_name}')(cls_name + ' ' + args.strip('"').strip("'"))
+            eval(f'self.do_{mthd_name}')(
+                cls_name + ' ' + args.strip('"').strip("'"))
         elif mthd_name == 'update':
             args = [
                 string.strip().strip('"').strip("'").strip()
@@ -185,6 +188,7 @@ class HBNBCommand(cmd.Cmd):
                 self.do_update(f"{cls_name} {args[0]} {args[1]} {args[2]}")
         else:
             print("** unknown method  **")
+
 
 if __name__ == '__main__':
     HBNBCommand().cmdloop()

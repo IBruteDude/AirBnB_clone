@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-''' serializes instances to a JSON file and deserializes JSON file to instances '''
+''' serializes and deserializes instances from/to a JSON file '''
 import json
 
 

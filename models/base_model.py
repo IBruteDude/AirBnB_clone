@@ -4,8 +4,9 @@ import sys
 import os
 from datetime import datetime
 from uuid import uuid4
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from models import storage
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
 
 class BaseModel:
     ''' The base model class with functionality for other entity classes '''
@@ -44,6 +45,7 @@ class BaseModel:
         return '[{}] ({}) {}'.format(
             type(self).__name__, self.id, self.__dict__
         )
+
 
 if __name__ == '__main__':
     my_model = BaseModel()
