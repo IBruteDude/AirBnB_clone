@@ -26,7 +26,6 @@ class HBNBCommand(cmd.Cmd):
 
     def do_EOF(self, arg):
         ''' This function used to quit the cmd '''
-        print("")
         return True
 
     def do_quit(self, arg):
@@ -136,18 +135,20 @@ class HBNBCommand(cmd.Cmd):
         instance = object[instance_key]
         if attribute_name in ["id", "created_at", "updated_at"]:
             return
-        elif hasattr(instance, attribute_name):
-            attribute_type = type(getattr(instance, attribute_name))
-            if attribute_type is str:
-                attribute_value = attribute_value.strip('"')
-            elif attribute_type is int:
-                attribute_value = int(attribute_value)
-            elif attribute_type is float:
-                attribute_value = float(attribute_value)
-            setattr(instance, attribute_name, attribute_value)
-            storage.save()
         else:
-            print("** attribute doesn't exist **")
+            setattr(instance, attribute_name, eval(attribute_value))
+        # elif hasattr(instance, attribute_name):
+        #     attribute_type = type(getattr(instance, attribute_name))
+        #     if attribute_type is str:
+        #         attribute_value = attribute_value.strip('"')
+        #     elif attribute_type is int:
+        #         attribute_value = int(attribute_value)
+        #     elif attribute_type is float:
+        #         attribute_value = float(attribute_value)
+        #     setattr(instance, attribute_name, attribute_value)
+        #     storage.save()
+        # else:
+        #     print("** attribute doesn't exist **")
 
     def default(self, line):
         ''' Handles all the method call syntax and non-command cases'''
