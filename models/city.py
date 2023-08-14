@@ -5,8 +5,8 @@ from models.base_model import BaseModel
 
 class City(BaseModel):
     ''' Class for modeling a City entity '''
+    name = ''
+    state_id = ''
     def __init__(self, *args, **kwargs):
         ''' Initialiser of the City class '''
-        self.name = ''
-        self.state_id = ''
         super().__init__(**kwargs)
