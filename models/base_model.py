@@ -4,8 +4,8 @@ import sys
 import os
 from datetime import datetime
 from uuid import uuid4
-from models import storage
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+from models import storage
 
 
 class BaseModel:
@@ -51,12 +51,15 @@ if __name__ == '__main__':
     my_model = BaseModel()
     my_model.name = "My First Model"
     my_model.my_number = 89
+    
+    print(my_model.id)
     # print("--------\n{}\n--------".format(type(my_model).__name__))
     print(my_model)
     print()
     my_model.save()
     print()
     print(my_model)
+    print()
     print()
     my_model_json = my_model.to_dict()
     print(my_model_json)
