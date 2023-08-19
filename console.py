@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-""" This module defines the entry point of the command interpreter """
+''' This module defines the entry point of the command interpreter '''
 from models.base_model import BaseModel
 from models.city import City
 from models.amenity import Amenity
@@ -39,156 +39,134 @@ class HBNBCommand(cmd.Cmd):
     def do_create(self, arg):
         ''' Creates a new instance of BaseModel '''
         args = arg.split()
-        if not arg:
-            print("** class name missing **")
-        elif args[0] in self.classes:
-            new_instance = eval(args[0])()
-
-            new_instance.save()
-            print(new_instance.id)
-        else:
-            print("** class doesn't exist **")
+        try:
+            if not arg:
+                raise Exception("** class name missing **")
+            elif args[0] not in self.classes:
+                raise Exception("** class doesn't exist **")
+            else:
+                print(eval(args[0]).create())
+        except Exception as e:
+            print(e)
 
     def do_show(self, arg):
         ''' Prints the string representation of an instance '''
         args = arg.split()
         object = storage.all()
-        if not args:
-            print("** class name missing **")
-        elif args[0] not in self.classes:
-            print("** class doesn't exist **")
-        elif len(args) < 2:
-            print("** instance id missing **")
-        elif "{}.{}".format(args[0], args[1]) not in object:
-            print("** no instance found **")
-        else:
-            selectedInstance = object["{}.{}".format(args[0], args[1])]
-            print("{}".format(selectedInstance))
+        try:
+            if not args:
+                raise Exception("** class name missing **")
+            elif args[0] not in self.classes:
+                raise Exception("** class doesn't exist **")
+            elif len(args) < 2:
+                raise Exception("** instance id missing **")
+            elif "{}.{}".format(args[0], args[1]) not in object:
+                raise Exception("** no instance found **")
+            else:
+                print(eval(args[0]).show(args[1].strip('"').strip("'")))
+        except Exception as e:
+            print(e)
 
     def do_destroy(self, arg):
         ''' Deletes an instance based on the class name and id '''
         args = arg.split()
         object = storage.all()
-        if not args:
-            print("** class name missing **")
-        elif args[0] not in self.classes:
-            print("** class doesn't exist **")
-        elif len(args) < 2:
-            print("** instance id missing **")
-        elif "{}.{}".format(args[0], args[1]) not in object:
-            print("** no instance found **")
-        else:
-            selectedInstance = "{}.{}".format(args[0], args[1])
-            object.pop(selectedInstance)
-            storage.save()
+        try:
+            if not args:
+                raise Exception("** class name missing **")
+            elif args[0] not in self.classes:
+                raise Exception("** class doesn't exist **")
+            elif len(args) < 2:
+                raise Exception("** instance id missing **")
+            elif "{}.{}".format(args[0], args[1]) not in object:
+                raise Exception("** no instance found **")
+            else:
+                eval(args[0]).destroy(args[1].strip('"').strip("'"))
+        except Exception as e:
+            print(e)
 
     def do_all(self, arg):
         ''' Prints all stored entities based or not on the class name '''
         args = arg.split()
-        object = storage.all()
+        obj_dict = storage.all()
         if len(args) == 0:
-            for key, value in object.items():
-                print(key, value)
+            print([str(obj) for obj in obj_dict.values()])
         elif args[0] not in self.classes:
             print("** class doesn't exist **")
         elif len(args) != 0:
-            for key, value in object.items():
-                if value.__class__.__name__ == args[0]:
-                    print(key, value)
+            print([str(obj) for obj in eval(args[0]).all()])
 
     def do_update(self, arg):
         ''' Updates an instance based on the class name and id '''
         args = arg.split()
 
-        if not args:
-            print("** class name missing **")
-            return
+        try:
+            if not args:
+                raise Exception("** class name missing **")
+            elif args[0] not in self.classes:
+                raise Exception("** class doesn't exist **")
+            elif len(args) < 2:
+                raise Exception("** instance id missing **")
+            elif len(args) < 3:
+                raise Exception("** attribute name missing **")
+            elif len(args) < 4:
+                raise Exception("** value missing **")
 
-        class_name = args[0]
-        if class_name not in self.classes:
-            print("** class doesn't exist **")
-            return
+            instance_key = f"{args[0]}.{args[1]}"
 
-        if len(args) < 2:
-            print("** instance id missing **")
-            return
+            if instance_key not in storage.all().keys():
+                raise Exception("** no instance found **")
 
-        instance_id = args[1]
-        object = storage.all()
-        instance_key = f"{class_name}.{instance_id}"
-
-        if instance_key not in object:
-            print("** no instance found **")
-            return
-
-        if len(args) < 3:
-            print("** attribute name missing **")
-            return
-
-        attribute_name = args[2]
-        if len(args) < 4:
-            print("** value missing **")
-            return
-
-        attribute_value = args[3]
-
-        instance = object[instance_key]
-        if attribute_name in ["id", "created_at", "updated_at"]:
-            return
-        else:
-            setattr(instance, attribute_name, eval(attribute_value))
-        # elif hasattr(instance, attribute_name):
-        #     attribute_type = type(getattr(instance, attribute_name))
-        #     if attribute_type is str:
-        #         attribute_value = attribute_value.strip('"')
-        #     elif attribute_type is int:
-        #         attribute_value = int(attribute_value)
-        #     elif attribute_type is float:
-        #         attribute_value = float(attribute_value)
-        #     setattr(instance, attribute_name, attribute_value)
-        #     storage.save()
-        # else:
-        #     print("** attribute doesn't exist **")
+            eval(args[0]).update(*args[1:])
+        except Exception as e:
+            print(e)
 
     def default(self, line):
         ''' Handles all the method call syntax and non-command cases'''
-        cls_name = line[:line.find('.')]
+        idxs = [line.find('.'), line.find('('), line.find(')')]
         try:
-            if not issubclass(eval(cls_name), BaseModel):
-                print("** class doesn't exist **")
+            if idxs[0] == -1 or idxs[1] < idxs[0] or idxs[2] != len(line) - 1:
+                print("** inappropriate syntax **")
                 return
-        except Exception:
-            print("** class doesn't exist **")
-            return
+            cls = eval(line[:idxs[0]])
+            if cls.__name__ not in self.classes:
+                raise Exception("** class doesn't exist **")
 
-        mthd_name = line[line.find('.') + 1:line.find('(')]
-        args = line[line.find('(') + 1:line.find(')')]
-        if mthd_name == 'all' or mthd_name == 'count':
-            all_found = []
-            for key, value in storage.all().items():
-                if key[:key.find('.')] == cls_name:
-                    all_found.append(str(value))
+            mthd_name = line[idxs[0] + 1:idxs[1]]
 
-            if mthd_name == 'all':
-                print(all_found)
-            else:
-                print(len(all_found))
-        elif mthd_name == 'show' or mthd_name == 'destroy':
-            eval(f'self.do_{mthd_name}')(
-                cls_name + ' ' + args.strip('"').strip("'"))
-        elif mthd_name == 'update':
-            args = [
-                string.strip().strip('"').strip("'").strip()
-                for string in args.split(',')
-            ]
-            if args[1][0] == '{':
-                dict_repr = dict(eval(args[1]))
-                for key, value in dict_repr.items():
-                    self.do_update(f"{cls_name} {args[0]} {key} {value}")
-            else:
-                self.do_update(f"{cls_name} {args[0]} {args[1]} {args[2]}")
-        else:
-            print("** unknown method  **")
+            try:
+                arg_tuple = tuple(eval(line[idxs[1]:]))
+            except Exception as e:
+                raise Exception("** inappropriate syntax **\n" +
+                                f"[{e.__class__.__name__}]: {e}")
+
+            tlen = len(arg_tuple)
+            if mthd_name in ['all', 'count', 'create']:
+                result = eval(line)
+                if isinstance(result, list):
+                    print([str(obj) for obj in result])
+                else:
+                    print(result)
+            elif mthd_name in ['destroy', 'show']:
+                if tlen < 1:
+                    raise Exception("** instance id missing **")
+                result = eval(line)
+                if result is not None:
+                    print(result)
+            elif mthd_name == 'update':
+                if tlen < 1:
+                    raise Exception("** instance id missing **")
+                if tlen < 2:
+                    raise Exception("** attribute name missing **")
+                if isinstance(arg_tuple[1], str):
+                    if tlen < 3:
+                        raise Exception("** value missing **")
+                    cls.update(arg_tuple[0], arg_tuple[1], repr(arg_tuple[2]))
+                else:
+                    cls.update(arg_tuple[0], repr(arg_tuple[1]))
+
+        except Exception as e:
+            print(str(e))
 
 
 if __name__ == '__main__':

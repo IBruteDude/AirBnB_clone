@@ -35,11 +35,13 @@ class FileStorage:
         from models.place import Place
         ''' deserializes the JSON file to __objects '''
         try:
+            self.__objects = {}
             with open(self.__file_path, 'r', encoding="UTF-8") as myFile:
                 obj_dict = json.load(myFile)
-
             for key, value in obj_dict.items():
                 obj = eval(f"{value['__class__']}(**value)")
                 self.__objects[key] = obj
-        except FileNotFoundError:
+        except json.JSONDecodeError:
+            pass
+        except Exception:
             pass

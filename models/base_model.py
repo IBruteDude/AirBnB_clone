@@ -4,8 +4,8 @@ import sys
 import os
 from datetime import datetime
 from uuid import uuid4
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from models import storage
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 
 class BaseModel:
@@ -46,12 +46,65 @@ class BaseModel:
             type(self).__name__, self.id, self.__dict__
         )
 
+    @classmethod
+    def all(cls):
+        all_found = []
+        for key, value in storage.all().items():
+            if key[:key.find('.')] == cls.__name__:
+                all_found.append(value)
+        return all_found
+
+    @classmethod
+    def count(cls):
+        return len(cls.all())
+
+    @classmethod
+    def create(cls):
+        new_obj = cls()
+        storage.save()
+        return new_obj.id
+
+    @classmethod
+    def show(cls, uuid):
+        objs_list = cls.all()
+        for obj in objs_list:
+            if obj.id == uuid:
+                return obj
+        print("** no instance found **")
+
+    @classmethod
+    def destroy(cls, uuid):
+        objs_dict = storage.all()
+        key = f'{cls.__name__}.{uuid}'
+        if key in objs_dict.keys():
+            del objs_dict[key]
+        else:
+            print("** no instance found **")
+        storage.save()
+
+    @classmethod
+    def update(cls, *args):
+        uuid = args[0]
+        obj = cls.show(uuid)
+        if obj is not None:
+            if len(args) == 2:
+                dict_repr = dict(eval(args[1]))
+                for key, value in dict_repr.items():
+                    if key not in ["id", "created_at", "updated_at"]:
+                        setattr(obj, key, value)
+                obj.save()
+            else:
+                attr_name, attr_value = args[1], eval(args[2])
+                if attr_name not in ["id", "created_at", "updated_at"]:
+                    setattr(obj, attr_name, attr_value)
+                obj.save()
+
 
 if __name__ == '__main__':
     my_model = BaseModel()
     my_model.name = "My First Model"
     my_model.my_number = 89
-    
+
     print(my_model.id)
     # print("--------\n{}\n--------".format(type(my_model).__name__))
     print(my_model)
